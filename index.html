@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Algoritmo: Cálculo de Áreas y Volúmenes – GA2-240201528-AA4-EV01</title>
+  <style>
+    :root{
+      --bg:#f3f7f5; --fg:#0f172a; --card:#ffffff; --brand:#0ea5a4; --muted:#6b7280;
+      --border:#e5e7eb;
+    }
+    *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Noto Sans",sans-serif}
+    body{background:linear-gradient(120deg,#f3f7f5 0%,#e6fff8 100%);margin:0;color:var(--fg)}
+    .wrap{max-width:1100px;margin:40px auto;padding:0 16px}
+    .h1{font-weight:800;font-size:clamp(22px,3vw,30px);text-align:center;margin-bottom:8px}
+    .h2{font-size:clamp(18px,2.2vw,22px);font-weight:800;margin:8px 0}
+    .sub{color:var(--muted);text-align:center;margin-bottom:22px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 6px 20px rgba(15,23,42,0.06)}
+    .row{display:grid;gap:16px}
+    @media(min-width:900px){.row{grid-template-columns:1fr 2fr}}
+    label{display:block;font-size:12px;font-weight:700;color:#334155;margin-bottom:6px}
+    input,select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:12px;outline:none}
+    input:focus,select:focus{border-color:#22d3ee;box-shadow:0 0 0 3px rgba(34,211,238,.25)}
+    .tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+    .tab{border:1px solid var(--border);border-radius:999px;padding:8px 14px;background:#fff;cursor:pointer}
+    .tab.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+    .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .kpi{border:1px dashed var(--border);padding:12px;border-radius:12px;text-align:center;background:#f9fafb}
+    .kpi h3{margin:4px 0 8px;font-size:14px}
+    .kpi .v{font-size:22px;font-weight:800}
+    .muted{color:var(--muted);font-size:12px}
+    .list{margin:0 0 0 18px;font-size:14px;color:#334155}
+    .right{display:flex;justify-content:flex-end;gap:8px;align-items:center}
+    .btn{border:1px solid var(--border);padding:8px 12px;border-radius:10px;background:#fff;cursor:pointer}
+    .btn.brand{background:var(--brand);color:#fff;border-color:var(--brand)}
+    .pill{display:inline-block;background:#ecfeff;border:1px solid #a5f3fc;color:#036672;padding:2px 8px;border-radius:999px;font-size:12px;margin-left:6px}
+    .help{font-size:13px;color:#334155}
+    footer{margin:26px 0 16px;text-align:center;color:#64748b;font-size:12px}
+    .flex{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+    .del{border:none;background:#fee2e2;color:#b91c1c;border-radius:10px;padding:8px 10px;cursor:pointer}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="h1">Algoritmo para el cálculo de áreas y volúmenes</div>
+    <div class="sub">GA2-240201528-AA4-EV01 · Programa: ADS · Aprendiz: Michael Sebastián Campos Ruiz</div>
+
+    <div class="card">
+      <div class="tabs">
+        <button class="tab active" data-tab="planas">Figuras planas</button>
+        <button class="tab" data-tab="solidos">Sólidos</button>
+        <button class="tab" data-tab="irregular">Figuras irregulares</button>
+      </div>
+
+      <!-- PL ANAS -->
+      <section id="planas" class="row">
+        <div>
+          <label>Figura</label>
+          <select id="fig-plana">
+            <option value="rect">Rectángulo</option>
+            <option value="tri">Triángulo</option>
+            <option value="circ">Círculo</option>
+            <option value="trap">Trapecio</option>
+            <option value="cua">Cuadrado</option>
+          </select>
+          <div id="inputs-planas" style="margin-top:12px"></div>
+        </div>
+        <div>
+          <div class="card" style="background:#f8fafc">
+            <div class="h2">Fórmulas</div>
+            <div id="formula-planas" class="help"></div>
+          </div>
+          <div class="grid2" style="margin-top:12px">
+            <div class="kpi">
+              <h3>Área</h3>
+              <div id="area-plana" class="v">-</div>
+              <div class="muted">unidades cuadradas</div>
+            </div>
+            <div class="kpi">
+              <h3>Perímetro</h3>
+              <div id="peri-plana" class="v">-</div>
+              <div class="muted">unidades lineales</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S O L I D O S -->
+      <section id="solidos" class="row" style="display:none">
+        <div>
+          <label>Sólido</label>
+          <select id="fig-solido">
+            <option value="cubo">Cubo</option>
+            <option value="prisma">Prisma rectangular</option>
+            <option value="cil">Cilindro</option>
+            <option value="cono">Cono</option>
+            <option value="esf">Esfera</option>
+            <option value="pira">Pirámide regular</option>
+          </select>
+          <div id="inputs-solidos" style="margin-top:12px"></div>
+        </div>
+        <div>
+          <div class="card" style="background:#f8fafc">
+            <div class="h2">Fórmulas</div>
+            <div id="formula-solidos" class="help"></div>
+          </div>
+          <div class="grid2" style="margin-top:12px">
+            <div class="kpi">
+              <h3>Área superficial</h3>
+              <div id="area-solido" class="v">-</div>
+              <div class="muted">unidades cuadradas</div>
+            </div>
+            <div class="kpi">
+              <h3>Volumen</h3>
+              <div id="vol-solido" class="v">-</div>
+              <div class="muted">unidades cúbicas</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- I R R E G U L A R -->
+      <section id="irregular" style="display:none">
+        <div class="h2">Suma de áreas por descomposición</div>
+        <p class="help">Añade partes y coloca sus medidas. El sistema suma el área total. (Para volumen irregular usa la misma idea con prismas/cilindros).</p>
+
+        <div id="partes"></div>
+        <div class="right" style="margin-top:8px">
+          <button class="btn" id="add-parte">Añadir parte</button>
+          <div class="h2" style="margin:0">Área total ≈ <span id="area-total">0.000</span> u²</div>
+        </div>
+      </section>
+    </div>
+
+    <div class="row" style="margin-top:16px">
+      <div class="card">
+        <div class="h2">Sustento teórico</div>
+        <ul class="list">
+          <li>Rectángulo: A = b·h, P = 2(b+h)</li>
+          <li>Triángulo: A = (b·h)/2, P = a+b+c</li>
+          <li>Círculo: A = πr², C = 2πr</li>
+          <li>Trapecio: A = ((B+b)/2)·h</li>
+          <li>Cuadrado: A = L², P = 4L</li>
+          <li>Cubo: S = 6a², V = a³</li>
+          <li>Prisma rectangular: S = 2(ab+bc+ac), V = a·b·c</li>
+          <li>Cilindro: S = 2πr(h+r), V = πr²h</li>
+          <li>Cono: S = πr(r+√(r²+h²)), V = (1/3)πr²h</li>
+          <li>Esfera: S = 4πr², V = (4/3)πr³</li>
+          <li>Pirámide regular: S = A_base + (P_base·apotema)/2, V = (1/3)A_base·h</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="h2">Cómo usar</div>
+        <ol class="list">
+          <li>Selecciona la figura o sólido.</li>
+          <li>Ingresa las dimensiones (misma unidad para todas).</li>
+          <li>Lee el resultado (u² para áreas, u³ para volúmenes).</li>
+          <li>Para irregulares, descompón en partes y suma.</li>
+        </ol>
+      </div>
+    </div>
+
+    <footer>Versión de estudiante · GA2-240201528-AA4-EV01</footer>
+  </div>
+
+  <script>
+    const $ = (q)=>document.querySelector(q);
+    const $$ = (q)=>document.querySelectorAll(q);
+    const round = (x)=> (isFinite(x) ? Number.parseFloat(x).toFixed(3) : "-");
+
+    // Tabs
+    $$(".tab").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        $$(".tab").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        ["planas","solidos","irregular"].forEach(id=>$("#"+id).style.display="none");
+        $("#"+btn.dataset.tab).style.display="grid";
+      });
+    });
+
+    // ------------------ FIGURAS PLANAS ------------------
+    const inputsPlanas = {
+      rect: [{k:'b',l:'Base (b)'},{k:'h',l:'Altura (h)'}],
+      tri:  [{k:'b',l:'Base (b)'},{k:'h',l:'Altura (h)'},{k:'a',l:'Lado a'},{k:'c',l:'Lado c'}],
+      circ: [{k:'r',l:'Radio (r)'}],
+      trap: [{k:'B',l:'Base mayor (B)'},{k:'b',l:'Base menor (b)'},{k:'h',l:'Altura (h)'},{k:'l1',l:'Lado no paralelo 1 (l1)'},{k:'l2',l:'Lado no paralelo 2 (l2)'}],
+      cua:  [{k:'L',l:'Lado (L)'}],
+    };
+    const formulasPlanas = {
+      rect: "A = b·h · P = 2(b+h)",
+      tri: "A = (b·h)/2 · P = a+b+c",
+      circ: "A = πr² · C = 2πr",
+      trap: "A = ((B+b)/2)·h · P = B + b + l1 + l2",
+      cua: "A = L² · P = 4L",
+    };
+
+    function renderInputsPlanas(){
+      const fig = $("#fig-plana").value;
+      const cont = $("#inputs-planas"); cont.innerHTML = "";
+      inputsPlanas[fig].forEach(f=>{
+        const wrap = document.createElement("div");
+        wrap.className="flex";
+        wrap.innerHTML = `<div style="min-width:220px;flex:1"><label>${f.l} (u)</label><input type="number" step="any" id="pl-${f.k}"/></div>`;
+        cont.appendChild(wrap);
+      });
+      $("#formula-planas").textContent = formulasPlanas[fig];
+      $$("#inputs-planas input").forEach(i=>i.addEventListener("input",calcPlanas));
+      calcPlanas();
+    }
+
+    function calcPlanas(){
+      const fig = $("#fig-plana").value;
+      const get=(k)=> parseFloat($("#pl-"+k)?.value||"");
+      let A=NaN,P=NaN;
+      if(fig==='rect'){const b=get('b'),h=get('h');A=b*h;P=2*(b+h);}
+      if(fig==='tri'){const b=get('b'),h=get('h');const a=get('a'),c=get('c');A=(b*h)/2;P=a+b+c;}
+      if(fig==='circ'){const r=get('r');A=Math.PI*r*r;P=2*Math.PI*r;}
+      if(fig==='trap'){const B=get('B'),b=get('b'),h=get('h'),l1=get('l1'),l2=get('l2');A=((B+b)/2)*h;P=B+b+l1+l2;}
+      if(fig==='cua'){const L=get('L');A=L*L;P=4*L;}
+      $("#area-plana").textContent = round(A);
+      $("#peri-plana").textContent = round(P);
+    }
+
+    $("#fig-plana").addEventListener("change",renderInputsPlanas);
+    renderInputsPlanas();
+
+    // ------------------ SÓLIDOS ------------------
+    const inputsSolidos = {
+      cubo:[{k:'a',l:'Arista (a)'}],
+      prisma:[{k:'a',l:'Largo (a)'},{k:'b',l:'Ancho (b)'},{k:'c',l:'Alto (c)'}],
+      cil:[{k:'r',l:'Radio (r)'},{k:'h',l:'Altura (h)'}],
+      cono:[{k:'r',l:'Radio (r)'},{k:'h',l:'Altura (h)'}],
+      esf:[{k:'r',l:'Radio (r)'}],
+      pira:[{k:'Ab',l:'Área de la base (A_base)'},{k:'Pb',l:'Perímetro base (P_base)'},{k:'ap',l:'Apotema (a_p)'},{k:'h',l:'Altura (h)'}],
+    };
+    const formulasSolidos = {
+      cubo: "S = 6a² · V = a³",
+      prisma: "S = 2(ab+bc+ac) · V = a·b·c",
+      cil: "S = 2πr(h+r) · V = πr²h",
+      cono: "S = πr(r+√(r²+h²)) · V = (1/3)πr²h",
+      esf: "S = 4πr² · V = (4/3)πr³",
+      pira: "S = A_base + (P_base·ap)/2 · V = (1/3)A_base·h",
+    };
+
+    function renderInputsSolidos(){
+      const fig = $("#fig-solido").value;
+      const cont = $("#inputs-solidos"); cont.innerHTML = "";
+      inputsSolidos[fig].forEach(f=>{
+        const wrap = document.createElement("div");
+        wrap.innerHTML = `<label>${f.l} (u)</label><input type="number" step="any" id="so-${f.k}"/>`;
+        cont.appendChild(wrap);
+      });
+      $("#formula-solidos").textContent = formulasSolidos[fig];
+      $$("#inputs-solidos input").forEach(i=>i.addEventListener("input",calcSolidos));
+      calcSolidos();
+    }
+
+    function calcSolidos(){
+      const fig = $("#fig-solido").value;
+      const get=(k)=> parseFloat($("#so-"+k)?.value||"");
+      let S=NaN,V=NaN;
+      if(fig==='cubo'){const a=get('a');S=6*a*a;V=a*a*a;}
+      if(fig==='prisma'){const a=get('a'),b=get('b'),c=get('c');S=2*(a*b+b*c+a*c);V=a*b*c;}
+      if(fig==='cil'){const r=get('r'),h=get('h');S=2*Math.PI*r*(h+r);V=Math.PI*r*r*h;}
+      if(fig==='cono'){const r=get('r'),h=get('h');const g=Math.sqrt(r*r+h*h);S=Math.PI*r*(r+g);V=(Math.PI*r*r*h)/3;}
+      if(fig==='esf'){const r=get('r');S=4*Math.PI*r*r;V=(4/3)*Math.PI*r*r*r;}
+      if(fig==='pira'){const Ab=get('Ab'),Pb=get('Pb'),ap=get('ap'),h=get('h');S=Ab+(Pb*ap)/2;V=(Ab*h)/3;}
+      $("#area-solido").textContent = round(S);
+      $("#vol-solido").textContent = round(V);
+    }
+
+    $("#fig-solido").addEventListener("change",renderInputsSolidos);
+    renderInputsSolidos();
+
+    // ------------------ IRREGULARES ------------------
+    const partesEl = $("#partes");
+    function addParte(tipo='rect'){
+      const id = Math.random().toString(36).slice(2,8);
+      const div = document.createElement('div');
+      div.className="card";
+      div.style.marginTop='10px';
+      div.dataset.id=id;
+      div.innerHTML = `
+        <div class="flex">
+          <div style="min-width:180px">
+            <label>Tipo</label>
+            <select class="tipo">
+              <option value="rect">Rectángulo</option>
+              <option value="tri">Triángulo</option>
+              <option value="circ">Círculo</option>
+              <option value="trap">Trapecio</option>
+              <option value="cua">Cuadrado</option>
+            </select>
+          </div>
+          <div class="inputs"></div>
+          <button class="del">Eliminar</button>
+        </div>`;
+      partesEl.appendChild(div);
+      const tipoSel = div.querySelector('.tipo');
+      const inputs = div.querySelector('.inputs');
+      const render = ()=>{
+        const t = tipoSel.value;
+        inputs.innerHTML='';
+        (inputsPlanas[t]||[]).forEach(f=>{
+          const w = document.createElement('div');
+          w.style.minWidth='180px';
+          w.innerHTML = `<label>${f.l} (u)</label><input type="number" step="any" class="in" data-k="${f.k}"/>`;
+          inputs.appendChild(w);
+        });
+        calcIrregular();
+      };
+      tipoSel.addEventListener('change', render);
+      div.querySelector('.del').addEventListener('click',()=>{ div.remove(); calcIrregular(); });
+      div.addEventListener('input', calcIrregular);
+      tipoSel.value = tipo;
+      render();
+    }
+
+    function calcIrregular(){
+      let total=0;
+      partesEl.querySelectorAll('.card').forEach(div=>{
+        const t = div.querySelector('.tipo').value;
+        const get=(k)=> parseFloat(div.querySelector(`.in[data-k="${k}"]`)?.value||"");
+        if(t==='rect'){const b=get('b'),h=get('h'); total += (b*h)||0;}
+        if(t==='tri'){const b=get('b'),h=get('h'); total += ((b*h)/2)||0;}
+        if(t==='circ'){const r=get('r'); total += (Math.PI*r*r)||0;}
+        if(t==='trap'){const B=get('B'),b=get('b'),h=get('h'); total += (((B+b)/2)*h)||0;}
+        if(t==='cua'){const L=get('L'); total += (L*L)||0;}
+      });
+      $("#area-total").textContent = round(total);
+    }
+
+    $("#add-parte").addEventListener("click",()=>addParte());
+    // una parte inicial por UX
+    addParte('rect');
+  </script>
+</body>
+</html>
