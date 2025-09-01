@@ -1,0 +1,1 @@
+# Algoritmo-para-el-c-lculo-de-reas-y-vol-menes.-GA2-240201528-AA4-EV01.
